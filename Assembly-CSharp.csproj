@@ -111,6 +111,16 @@
      <Compile Include="Assets\Komal\Util\Native\KomalUtil.Partial.NativePopups.cs" />
      <Compile Include="Assets\Komal\Util\Native\KomalUtil.Partial.NativeUrl.cs" />
      <Compile Include="Assets\Komal\Util\Native\KomalUtil.Partial.NativeVibration.cs" />
+     <Compile Include="Assets\Scripts\Command\Command.cs" />
+     <Compile Include="Assets\Scripts\Component\BaseScene.cs" />
+     <Compile Include="Assets\Scripts\Component\ControlBox.cs" />
+     <Compile Include="Assets\Scripts\Component\Cub.cs" />
+     <Compile Include="Assets\Scripts\Component\DrawLineTool.cs" />
+     <Compile Include="Assets\Scripts\Component\MeshDeformer.cs" />
+     <Compile Include="Assets\Scripts\Component\MeshDeformerInput.cs" />
+     <Compile Include="Assets\Scripts\Component\RayPlan.cs" />
+     <Compile Include="Assets\Scripts\Proxy\GameContrProxy.cs" />
+     <Compile Include="Assets\Scripts\Proxy\ObjPoolProxy.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>/Users/mac/projects/2048LineGit/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
