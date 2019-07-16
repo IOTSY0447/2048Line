@@ -21,6 +21,11 @@ public class Cub : ComponentEx, INotificationHandler {
         this.num = num;
         string path = "numberImg/" + num;
         Texture img = Resources.Load (path) as Texture;
-        GetComponent<Renderer> ().material.mainTexture = img;
+        if (img != null) {
+            GetComponent<Renderer> ().material.mainTexture = img;
+        } else {
+            string ms = "未找到图片" + num;
+            Debug.LogError (ms);
+        }
     }
 }

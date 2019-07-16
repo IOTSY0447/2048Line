@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   springForce: 10
-  damping: 4
+  damping: 2
   testTouchTime: 0.1
 --- !u!114 &-7447426534851532690
 MonoBehaviour:
