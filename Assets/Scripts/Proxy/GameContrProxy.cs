@@ -69,7 +69,8 @@ public class GameContrProxy : Proxy {
             Transform lastCub = arrPassCub[arrPassCub.Count - 1];
             arrPassCub.RemoveAt (arrPassCub.Count - 1);
             lastCub.GetComponent<Cub> ().changNumber (newNum);
-            refreshAllCubPos (arrPassCub,lastCub);
+            moveIntoCub2 (lastCub);
+            refreshAllCubPos (arrPassCub);
         }
         arrLineNode.ForEach (lineOne => {
             GetLinePool.PushObject (lineOne);
@@ -100,9 +101,7 @@ public class GameContrProxy : Proxy {
     }
 
     //刷新所有方块的位置并生成需要补充位置的二维坐标序列
-    void refreshAllCubPos (List<Transform> hidList,Transform lastCub) {
-        // Transform lastCub = arrPassCub[arrPassCub.Count - 1];
-        Vector3 lastV3 = lastCub.position; // 最后剩下的方块的坐标，其他放开需要兑入这里
+    void refreshAllCubPos (List<Transform> hidList) {
         List<Vector2> arrHidVec2 = new List<Vector2> ();
         Dictionary<float, int> xToCount = new Dictionary<float, int> ();
         hidList.ForEach (hidOne => {
@@ -125,9 +124,6 @@ public class GameContrProxy : Proxy {
                 if (downCount != 0) {
                     Vector2 newVec2 = new Vector2 ((int) myVec2.x, (int) myVec2.y - downCount);
                     Vector3 newPos = getPosByMyCoord (newVec2);
-                    if (cubOne.transform == lastCub) {
-                        lastV3 = newPos;
-                    }
                     cubOne.GetComponent<Cub> ().moveAnction (newVec2, newPos, cubDownAnctionTime);
                 }
             }
@@ -141,12 +137,11 @@ public class GameContrProxy : Proxy {
             }
         }
         addCubByList (needAddVec2);
-        moveIntoCub (lastV3);
     }
     //兑入方法
-    void moveIntoCub (Vector3 lastCubV3) {
+    void moveIntoCub2 (Transform lastCub) {
         arrPassCub.ForEach (cubOne => {
-            cubOne.GetComponent<Cub> ().moveIntoCub (lastCubV3, 0.5f, () => {
+            cubOne.GetComponent<Cub> ().moveIntoCub2 (lastCub, 0.5f, () => {
                 GetCubPool.PushObject (cubOne.gameObject);
                 arrCubInView.Remove (cubOne.gameObject);
             });

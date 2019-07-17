@@ -48,12 +48,15 @@ public class Cub : ComponentEx, INotificationHandler {
         mySequence.Append (move3);
     }
     //兑入动画 
-    public void moveIntoCub (Vector3 toPos, float time, System.Action callback) {
+    public void moveIntoCub2 (Transform toCub, float time, System.Action callback) {
         transform.localScale = new Vector3 (1, 1, 1) * 0.6f;
+        Transform beforeParent = transform.parent;
+        transform.parent = toCub;
         Sequence mySequence = DOTween.Sequence (); //创建空序列 
-        Tweener move = transform.DOMove (toPos, time);
+        Tweener move = transform.DOLocalMove (Vector3.zero, time);
         mySequence.Append (move);
         mySequence.AppendCallback (() => {
+            transform.parent = beforeParent;
             callback ();
         });
     }
