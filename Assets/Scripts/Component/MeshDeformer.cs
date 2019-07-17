@@ -45,7 +45,7 @@ public class MeshDeformer : MonoBehaviour {
 			testTimeVal += Time.deltaTime;
 			Vector3 v3 = new Vector3 (0, -0.5f, 0); //只针对正方体
 			Vector3 x = transform.TransformPoint (v3);
-			AddDeformingForce (x, 10);
+			AddDeformingForce (x, 15);
 			if (testTimeVal > testTouchTime) {
 				testTimeVal = 0;
 				isAnalogTouch = false;

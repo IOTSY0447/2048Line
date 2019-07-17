@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using komal.puremvc;
 using UnityEngine;
+using DG.Tweening;
 
 public class Cub : ComponentEx, INotificationHandler {
     public Vector2 myCoordinate; //用于计算连线是否是横或者竖
@@ -27,5 +28,15 @@ public class Cub : ComponentEx, INotificationHandler {
             string ms = "未找到图片" + num;
             Debug.LogError (ms);
         }
+    }
+    //移动动画
+    public void moveAnction(Vector2 myVec2,Vector3 toPos,float time){
+        myCoordinate = myVec2;
+        Sequence mySequence = DOTween.Sequence();//创建空序列 
+        Tweener move1 = transform.DOMove(toPos, time);
+        mySequence.Append(move1);
+        mySequence.AppendCallback(()=>{
+            transform.GetComponent<MeshDeformer>().AnalogTouch(toPos);
+        });
     }
 }
