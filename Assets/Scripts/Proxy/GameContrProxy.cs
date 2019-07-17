@@ -69,11 +69,7 @@ public class GameContrProxy : Proxy {
             Transform lastCub = arrPassCub[arrPassCub.Count - 1];
             arrPassCub.RemoveAt (arrPassCub.Count - 1);
             lastCub.GetComponent<Cub> ().changNumber (newNum);
-            arrPassCub.ForEach (cubOne => {
-                GetCubPool.PushObject (cubOne.gameObject);
-                arrCubInView.Remove (cubOne.gameObject);
-            });
-            refreshAllCubPos (arrPassCub);
+            refreshAllCubPos (arrPassCub,lastCub);
         }
         arrLineNode.ForEach (lineOne => {
             GetLinePool.PushObject (lineOne);
@@ -92,13 +88,21 @@ public class GameContrProxy : Proxy {
             case 4:
             case 5:
                 return (int) operateNum * 4;
+            case 6:
+            case 7:
+                return (int) operateNum * 8;
+            case 8:
+            case 9:
+                return (int) operateNum * 16;
             default:
-                return 0;
+                return (int) operateNum * 32;
         }
     }
 
     //刷新所有方块的位置并生成需要补充位置的二维坐标序列
-    void refreshAllCubPos (List<Transform> hidList) {
+    void refreshAllCubPos (List<Transform> hidList,Transform lastCub) {
+        // Transform lastCub = arrPassCub[arrPassCub.Count - 1];
+        Vector3 lastV3 = lastCub.position; // 最后剩下的方块的坐标，其他放开需要兑入这里
         List<Vector2> arrHidVec2 = new List<Vector2> ();
         Dictionary<float, int> xToCount = new Dictionary<float, int> ();
         hidList.ForEach (hidOne => {
@@ -121,6 +125,9 @@ public class GameContrProxy : Proxy {
                 if (downCount != 0) {
                     Vector2 newVec2 = new Vector2 ((int) myVec2.x, (int) myVec2.y - downCount);
                     Vector3 newPos = getPosByMyCoord (newVec2);
+                    if (cubOne.transform == lastCub) {
+                        lastV3 = newPos;
+                    }
                     cubOne.GetComponent<Cub> ().moveAnction (newVec2, newPos, cubDownAnctionTime);
                 }
             }
@@ -134,6 +141,16 @@ public class GameContrProxy : Proxy {
             }
         }
         addCubByList (needAddVec2);
+        moveIntoCub (lastV3);
+    }
+    //兑入方法
+    void moveIntoCub (Vector3 lastCubV3) {
+        arrPassCub.ForEach (cubOne => {
+            cubOne.GetComponent<Cub> ().moveIntoCub (lastCubV3, 0.5f, () => {
+                GetCubPool.PushObject (cubOne.gameObject);
+                arrCubInView.Remove (cubOne.gameObject);
+            });
+        });
     }
     //根据二维坐标序列添加方块添加方块
     public void addCubByList (List<Vector2> needAddVec2) {
@@ -149,6 +166,7 @@ public class GameContrProxy : Proxy {
             Vector3 formV3 = new Vector3 (toV3.x, toV3.y + getOffsetYByCount (xToCount[vec2.x]), toV3.z);
             GameObject cub = ControlBox.CreatorCub ();
             int num = getRandomNum ();
+            cub.transform.localScale = new Vector3 (1, 1, 1);
             cub.transform.position = formV3;
             arrCubInView.Add (cub);
             cub.GetComponent<Cub> ().changNumber (num);

@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using komal.puremvc;
 using UnityEngine;
-using DG.Tweening;
 
 public class Cub : ComponentEx, INotificationHandler {
     public Vector2 myCoordinate; //用于计算连线是否是横或者竖
@@ -29,14 +29,32 @@ public class Cub : ComponentEx, INotificationHandler {
             Debug.LogError (ms);
         }
     }
-    //移动动画
-    public void moveAnction(Vector2 myVec2,Vector3 toPos,float time){
+    //移动动画 有点弹性
+    public void moveAnction (Vector2 myVec2, Vector3 toPos, float time) {
         myCoordinate = myVec2;
-        Sequence mySequence = DOTween.Sequence();//创建空序列 
-        Tweener move1 = transform.DOMove(toPos, time);
-        mySequence.Append(move1);
-        mySequence.AppendCallback(()=>{
-            transform.GetComponent<MeshDeformer>().AnalogTouch(toPos);
+        Vector3 dpos = toPos - transform.position;
+        Vector3 toPos1 = toPos + dpos * 0.03f;
+        Vector3 toPos2 = toPos - dpos * 0.05f;
+        Vector3 toPos3 = toPos;
+        Sequence mySequence = DOTween.Sequence (); //创建空序列 
+        Tweener move1 = transform.DOMove (toPos1, time);
+        Tweener move2 = transform.DOMove (toPos2, time * 0.4f);
+        Tweener move3 = transform.DOMove (toPos3, time * 0.2f);
+        mySequence.Append (move1);
+        mySequence.AppendCallback (() => {
+            transform.GetComponent<MeshDeformer> ().AnalogTouch (toPos);
+        });
+        mySequence.Append (move2);
+        mySequence.Append (move3);
+    }
+    //兑入动画 
+    public void moveIntoCub (Vector3 toPos, float time, System.Action callback) {
+        transform.localScale = new Vector3 (1, 1, 1) * 0.6f;
+        Sequence mySequence = DOTween.Sequence (); //创建空序列 
+        Tweener move = transform.DOMove (toPos, time);
+        mySequence.Append (move);
+        mySequence.AppendCallback (() => {
+            callback ();
         });
     }
 }
